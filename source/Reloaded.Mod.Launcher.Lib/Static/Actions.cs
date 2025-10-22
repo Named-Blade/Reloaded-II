@@ -113,6 +113,11 @@ public static class Actions
     public static Action InitControllerSupport { get; set; } = null!;
 
     /// <summary>
+    /// Displays a message box to the screen with an input field.
+    /// </summary>
+    public static DisplayInputBoxDelegate DisplayInputBox { get; set; } = null!;
+
+    /// <summary>
     /// Delegate used to display a message to user's screen.
     /// </summary>
     /// <param name="title">Title of the error.</param>
@@ -131,6 +136,15 @@ public static class Actions
     /// <param name="cancel">Name of resource containing string for cancel button.</param>
     /// <returns>True if the dialog returned a positive ok result, else false.</returns>
     public delegate bool DisplayResourceMessageBoxOkCancelDelegate(string title, string message, string ok, string cancel);
+
+    /// <summary>
+    /// Delegate used to display a message box to user's screen with an input field.
+    /// </summary>
+    /// <param name="title">Title of the input box.</param>
+    /// <param name="message">The message in the input box.</param>
+    /// <param name="parameters">Additional parameters.</param>
+    /// <returns>True if the dialog returned a positive ok result, else false.</returns>
+    public delegate bool DisplayInputBoxDelegate(string title, string message, out string input, DisplayMessageBoxParams parameters = default);
 
     public struct DisplayMessageBoxParams
     {

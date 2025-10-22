@@ -119,6 +119,21 @@ public static class Startup
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(loaderConfig.NexusApiKey))
+                {
+                    if (!Actions.DisplayInputBox("Nexus API Key", "Please enter your Nexus API Key:", out string apiKey, new Actions.DisplayMessageBoxParams()
+                    {
+                        Width = 1000,//api keys loooong
+                        StartupLocation = Actions.WindowStartupLocation.CenterScreen
+                    }))
+                    {
+                        // User cancelled
+                        return;
+                    }
+
+                    loaderConfig.NexusApiKey = apiKey;
+                    IConfig<LoaderConfig>.ToPath(loaderConfig, Paths.LoaderConfigPath);
+                }
                 Utility.NxmHandler.NxmLink nxmLink = Utility.NxmHandler.Parse(downloadUrl);
 
                 Task<List<Utility.NxmHandler.NexusDownloadLink>> task = Utility.NxmHandler.GetDownloadLinksAsync(nxmLink, loaderConfig.NexusApiKey);

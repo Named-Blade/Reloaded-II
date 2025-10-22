@@ -33,7 +33,8 @@ public static class LibraryBindings
             showRunAppViaWineDialog: ShowRunAppViaWineDialog,
             showEditPackDialog: ShowEditPackDialog,
             showInstallModPackDialog: ShowInstallModPackDialog,
-            initControllerSupport: ControllerSupport.Init
+            initControllerSupport: ControllerSupport.Init,
+            DisplayInputBox: DisplayInputBox
         );
     }
 
@@ -96,6 +97,41 @@ public static class LibraryBindings
             createModDialog.Owner = Window.GetWindow((DependencyObject)owner);
         
         return ShowDialogAndGetResult(createModDialog);
+    }
+
+    private static bool DisplayInputBox(string title, string prompt, out string input, Actions.DisplayMessageBoxParams parameters)
+    {
+        input = string.Empty;
+
+        InputBox window = new InputBox(title, prompt);
+        
+        window.WindowStartupLocation = (WindowStartupLocation)parameters.StartupLocation;
+        if (parameters.Width != default)
+        {
+            window.SizeToContent = SizeToContent.Height;
+            window.Width = parameters.Width;
+        }
+
+        if (parameters.Timeout != default)
+        {
+            Task.Delay(parameters.Timeout).ContinueWith(o =>
+            {
+                ActionWrappers.ExecuteWithApplicationDispatcher(() =>
+                {
+                    if (Application.Current.Windows.Cast<Window>().Any(x => x == window))
+                        window.Close();
+                });
+            });
+        }
+
+        var result = window.ShowDialog();
+        if (result.HasValue && result.Value)
+        {
+            input = window.Input;
+            return true;
+        }
+
+        return false;
     }
 
     private static bool ShowMissingCoreDependency(MissingCoreDependencyDialogViewModel viewmodel) => ShowDialogAndGetResult(new MissingCoreDependencyDialog(viewmodel));

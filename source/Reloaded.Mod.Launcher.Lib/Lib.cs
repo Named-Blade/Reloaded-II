@@ -53,6 +53,7 @@ public static class Lib
     /// <param name="showEditPackDialog">Shows a dialog that allows the user to edit an individual mod pack.</param>
     /// <param name="showInstallModPackDialog">Shows a dialog that allows the user to install an individual mod pack.</param>
     /// <param name="initControllerSupport">Initialises controller support.</param>
+    /// <param name="displayInputBox">Delegate used to display a box to the screen with an input field.</param>
     public static void Init(IDictionaryResourceProvider provider, SynchronizationContext context, IIconConverter iconConverter, 
         IResourceFileSelector? languageSelector, IResourceFileSelector? themeSelector,
         Actions.CreateResourceFileSelectorDelegate createResourceFileSelector,
@@ -65,7 +66,8 @@ public static class Lib
         Actions.ShowEditModUserConfigDialogDelegate showEditModUserConfig, Actions.ShowFetchPackageDialogDelegate showFetchPackageDialog,
         Actions.ShowSelectAddedGameDialogDelegate showSelectAddedGameDialog, Actions.ShowAddAppHashMismatchDialogDelegate showAddAppMismatchDialog,
         Actions.ShowApplicationWarningDialogDelegate showApplicationWarningDialog, Actions.ShowRunAppViaWineDialogDelegate showRunAppViaWineDialog,
-        Actions.ShowEditPackDialogDelegate showEditPackDialog, Actions.ShowInstallModPackDialogDelegate showInstallModPackDialog, Action initControllerSupport)
+        Actions.ShowEditPackDialogDelegate showEditPackDialog, Actions.ShowInstallModPackDialogDelegate showInstallModPackDialog, Action initControllerSupport,
+        Actions.DisplayInputBoxDelegate DisplayInputBox)
     {
         Resources.Init(provider);
         IconConverter = iconConverter;
@@ -92,5 +94,6 @@ public static class Lib
         Actions.ShowEditPackDialog = showEditPackDialog;
         Actions.ShowInstallModPackDialog = showInstallModPackDialog;
         Actions.InitControllerSupport = initControllerSupport;
+        Actions.DisplayInputBox = DisplayInputBox;
     }
 }
