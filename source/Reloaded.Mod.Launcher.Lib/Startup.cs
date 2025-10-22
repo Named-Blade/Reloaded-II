@@ -110,11 +110,32 @@ public static class Startup
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void DownloadModAndExit(string downloadUrl)
     {
+        var loaderConfig = IoC.Get<LoaderConfig>();
         if (downloadUrl.StartsWith($"{Constants.ReloadedProtocol}:", StringComparison.InvariantCultureIgnoreCase))
+        {
             downloadUrl = downloadUrl.Substring(Constants.ReloadedProtocol.Length + 1);
+        }
+        else if (downloadUrl.StartsWith($"{Constants.NexusProtocol}:", StringComparison.InvariantCultureIgnoreCase))
+        {
+            try
+            {
+                Utility.NxmHandler.NxmLink nxmLink = Utility.NxmHandler.Parse(downloadUrl);
+
+                Task<List<Utility.NxmHandler.NexusDownloadLink>> task = Utility.NxmHandler.GetDownloadLinksAsync(nxmLink, loaderConfig.NexusApiKey);
+                List<Utility.NxmHandler.NexusDownloadLink> downloadLinks = task.GetAwaiter().GetResult();
+
+                //First returned is always user's preferred if that's set.
+                downloadUrl = downloadLinks[0].URI;
+            }
+            catch (Exception ex)
+            {
+                Static.Errors.HandleException(ex);
+                return;
+            }
+        }
 
         var package = new WebDownloadablePackage(new Uri(downloadUrl), true);
-        var viewModel = new DownloadPackageViewModel(package, IoC.Get<LoaderConfig>());
+        var viewModel = new DownloadPackageViewModel(package, loaderConfig);
         _ = viewModel.StartDownloadAsync();
 
         Actions.ShowFetchPackageDialog(viewModel);

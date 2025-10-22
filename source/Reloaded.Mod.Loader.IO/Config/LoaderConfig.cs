@@ -163,6 +163,11 @@ public class LoaderConfig : ObservableObject, IConfig<LoaderConfig>
     /// </summary>
     public bool DisableDInput { get; set; }
 
+    /// <summary>
+    /// Nexus Mods API key.
+    /// </summary>
+    public string NexusApiKey { get; set; }
+
     private string _launcherFolder;
 
     /* Some mods are universal :wink: */

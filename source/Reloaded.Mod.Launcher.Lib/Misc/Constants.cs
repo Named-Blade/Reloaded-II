@@ -21,6 +21,8 @@ public static class Constants
     public const string ReloadedProtocol = "R2";
     public const string ReloadedPackProtocol = "R2Pack";
 
+    public const string NexusProtocol = "nxm";
+
     public static readonly string ApplicationPath      = Process.GetCurrentProcess().MainModule!.FileName!;
     public static readonly string ApplicationDirectory = Path.GetDirectoryName(ApplicationPath)!;
 
